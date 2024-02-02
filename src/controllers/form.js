@@ -4,6 +4,7 @@ import dataMahasiswa from "../models/model.js";
 import html from "../utility/html.js";
 import Email from "../utility/email.js";
 import chromium from "chrome-aws-lambda";
+import puppeteer from "puppeteer";
 
 export const getForm = async (req, res, next) => {
   try {
@@ -68,17 +69,17 @@ export const tambahForm = async (req, res) => {
       },
     });
 
-    await formData.save();
+    // await formData.save();
 
-    const browser = await chromium.puppeteer.launch({
-      args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: "new",
-      ignoreHTTPSErrors: true,
-    });
+    // const browser = await chromium.puppeteer.launch({
+    //   args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+    //   defaultViewport: chromium.defaultViewport,
+    //   executablePath: await chromium.executablePath,
+    //   headless: true,
+    //   ignoreHTTPSErrors: true,
+    // });
 
-    // const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
 
     await page.setContent(html);
