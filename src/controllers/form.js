@@ -6,6 +6,7 @@ import Email from "../utility/email.js";
 import PDFDocument from "pdfkit";
 import path from "path";
 import { fileURLToPath } from "url";
+import checkLengthAlamat from "../utility/checkLengthAlamat.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -73,11 +74,86 @@ export const tambahForm = async (req, res) => {
     doc
       .font("Times-Roman")
       .fontSize(11)
-      .text("Nama Lengkap", 72, 220, { continued: true })
+      .text("Nama Lengkap", 72, 215, { continued: true })
       .fontSize(12)
-      .text("hasankuy", 90);
+      .text("hasankuy", 92);
 
-    doc.font("Times-Roman").text("Tempat Lahir");
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Tempat Lahir", 79, 235, { continued: true })
+      .fontSize(12)
+      .text("banyuwangi", 100, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Jenis Kelamin", 76, 255, { continued: true })
+      .fontSize(12)
+      .text("laki laki", 97, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Agama", 106, 275, { continued: true })
+      .fontSize(12)
+      .text("islam", 128, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("No. Whatsapp", 76, 295, { continued: true })
+      .fontSize(12)
+      .text("123456789012", 95, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Email", 112, 315, { continued: true })
+      .fontSize(12)
+      .text("example@gmail.com", 132, null);
+
+    doc.strokeColor("gray");
+    doc.lineWidth(0.5);
+    doc.moveTo(50, 335).lineTo(550, 335).stroke();
+    doc.font("Times-Bold").fontSize(12).text("Alamat", 50, 345);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Provinsi", 102, 360, { continued: true })
+      .fontSize(12)
+      .text("jawa timur", 123, 360, { continued: true })
+      .fontSize(11)
+      .text("Kabupaten", 250, 360, { continued: true })
+      .fontSize(12)
+      .text("Banyuwangi", 270, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Kecamatan", 90, 380, { continued: true })
+      .fontSize(12)
+      .text("tegaldlimo", 110, 380, { continued: true })
+      .fontSize(11)
+      .text("Desa", 263, 380, { continued: true })
+      .fontSize(12)
+      .text("Wringinpitu", 283, null);
+
+    const alamattext =
+      "dasdsadasdasdsdasdadsadasadasakdlaskdlaskdldasdasdsadsadasdsadsaddasdsadasdsadsadsddsadasdsaddsadasddsadaasdasdasdasdasdsadasdasdasdasdasdsadasdasdasdasdasdasdasdasdaasdasdasdasdasdasdsdasdasdadasdas dsdadasdsd asdasdas asdasdas asdasdas sadasskadk";
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Alamat", 105, 400, { continued: true })
+      .fontSize(12)
+      .text(checkLengthAlamat(alamattext), 127, 400, { lineGap: 5 });
+
+    doc
+      .fontSize(11)
+      .text("Desa", 363, 400, { continued: true })
+      .fontSize(12)
+      .text("Wringinpitu", 383, null);
 
     res.setHeader("Content-Type", "application/pdf");
     doc.pipe(res);
