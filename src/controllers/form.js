@@ -17,7 +17,7 @@ export const getForm = async (req, res, next) => {
 export const tambahForm = async (req, res) => {
   try {
     const doc = new PDFDocument();
-    doc.image(`${process.cwd()}/public/download.jpeg`, 100, 15, { width: 80 });
+    doc.image(`/public/download.jpeg`, 100, 15, { width: 80 });
 
     doc
       .font("Times-Bold")
