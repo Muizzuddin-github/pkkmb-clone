@@ -1,13 +1,10 @@
 import { createObjectCsvStringifier } from "csv-writer";
 import dataMahasiswa from "../models/model.js";
-// import puppeteer from "puppeteer";
-import html from "../utility/html.js";
-import Email from "../utility/email.js";
 import PDFDocument from "pdfkit";
+import Email from "../utility/email.js";
+import checkLengthAlamat from "../utility/checkLengthAlamat.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import checkLengthAlamat from "../utility/checkLengthAlamat.js";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -19,246 +16,83 @@ export const getForm = async (req, res, next) => {
   }
 };
 
-export const tambahForm = async (req, res) => {
+export const tambahForm = async (req, res, next) => {
   try {
-    const doc = new PDFDocument();
+    const {
+      nik,
+      jalurPendaftaran,
+      SumberForm,
+      dataDiri: {
+        namaLengkap,
+        tempatLahir,
+        tanggalLahir,
+        jenisKelamin,
+        agama,
+        email,
+        noWA,
+      },
+      alamat: { provinsi, kecamatan, detilAlamat, kabupaten, desa, rt, rw },
+      sekolah: { sekolahAsal, tahunLulus, jurusan, namaSekolah, nisn },
+      dataTambahan: { ukuranKaos, ukuranAlmamater },
+    } = req.body;
 
-    doc.page.margins = { top: 50, left: 50, bottom: 50, right: 50 };
-    doc.image(path.resolve(__dirname, "../../public/download.jpeg"), 100, 15, {
-      width: 80,
+    const formData = new dataMahasiswa({
+      nik,
+      jalurPendaftaran,
+      SumberForm,
+      dataDiri: {
+        namaLengkap,
+        tempatLahir,
+        tanggalLahir,
+        jenisKelamin,
+        agama,
+        email,
+        noWA,
+      },
+      alamat: {
+        provinsi,
+        kecamatan,
+        detilAlamat,
+        kabupaten,
+        desa,
+        rt,
+        rw,
+      },
+      sekolah: {
+        sekolahAsal,
+        tahunLulus,
+        jurusan,
+        namaSekolah,
+        nisn,
+      },
+      dataTambahan: {
+        ukuranKaos,
+        ukuranAlmamater,
+      },
     });
 
-    doc
-      .font("Times-Bold")
-      .fontSize(12)
-      .text("PPLP PT – PGRI BANYUWANGI", 190, 25)
-      .fontSize(18)
-      .text("Stikom PGRI Banyuwangi | ", 190, 40, { continued: true })
-      .fontSize(10)
-      .font("Times-Roman")
-      .text("www.stikombanyuwangi.ac.id", null, 50, { underline: true });
+    await formData.save();
 
-    doc
-      .fontSize(12)
-      .text(
-        "Jl. Jend. A. Yani No. 80 Telp. (0333) 417902 Banyuwangi 68416",
-        null,
-        65
-      );
+    const url = `${req.protocol}://${req.hostname}/api/form/bukti-pendaftaran/${nik}`;
 
-    doc.moveTo(50, 100).lineTo(550, 100).stroke();
+    const sendEmail = new Email({
+      from: "POS",
+      to: email,
+      subject: "Bukti Pendaftaran Stikom PGRI Banyuwangi",
+      html: `
+        <img src="https://iili.io/JcymQv2.png" alt="stikompgribanyuwangi">
+        <p style="font-size: 20px;">Hi!</p>
+        <p  style="font-size: 20px;">download bukti pendaftaran <span style="color : #4053df;  font-weight: bold;">${url}</span>.</p>
+        <p style="font-size:20px; font-weight:bold; font-family:sans-serif; letter-spacing:2px;">
+          Stikom PGRI Banyuwangi
+        </p>`,
+    });
 
-    doc
-      .font("Times-Bold")
-      .fontSize(12)
-      .text("Pendaftaran Mahasiswa Baru Periode 2024-2025", 50, 120);
+    await sendEmail.send();
 
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Jalur Pendaftaran", 50, 150, { continued: true })
-      .fontSize(12)
-      .text("S1 Reguler Pagi", 80, null, { continued: true })
-      .fontSize(11)
-      .text("Tipe pendaftaran", 180, null, { continued: true })
-      .fontSize(12)
-      .text("Diskon", 200);
-
-    doc.strokeColor("gray");
-    doc.lineWidth(0.5);
-    doc.moveTo(50, 170).lineTo(550, 170).stroke();
-    doc.font("Times-Bold").fontSize(12).text("Data Diri", 50, 180);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("NIK", 120, null, { continued: true })
-      .fontSize(12)
-      .text("8942930894", 140, null);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Nama Lengkap", 72, 215, { continued: true })
-      .fontSize(12)
-      .text("hasankuy", 92);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Tempat Lahir", 79, 235, { continued: true })
-      .fontSize(12)
-      .text("banyuwangi", 100, null);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Jenis Kelamin", 76, 255, { continued: true })
-      .fontSize(12)
-      .text("laki laki", 97, null);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Agama", 106, 275, { continued: true })
-      .fontSize(12)
-      .text("islam", 128, null);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("No. Whatsapp", 76, 295, { continued: true })
-      .fontSize(12)
-      .text("123456789012", 95, null);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Email", 112, 315, { continued: true })
-      .fontSize(12)
-      .text("example@gmail.com", 132, null);
-
-    doc.strokeColor("gray");
-    doc.lineWidth(0.5);
-    doc.moveTo(50, 335).lineTo(550, 335).stroke();
-    doc.font("Times-Bold").fontSize(12).text("Alamat", 50, 345);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Provinsi", 102, 360, { continued: true })
-      .fontSize(12)
-      .text("jawa timur", 123, 360, { continued: true })
-      .fontSize(11)
-      .text("Kabupaten", 250, 360, { continued: true })
-      .fontSize(12)
-      .text("Banyuwangi", 270, null);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Kecamatan", 90, 380, { continued: true })
-      .fontSize(12)
-      .text("tegaldlimo", 110, 380, { continued: true })
-      .fontSize(11)
-      .text("Desa", 263, 380, { continued: true })
-      .fontSize(12)
-      .text("Wringinpitu", 283, null);
-
-    doc
-      .fontSize(11)
-      .text("Rt/Rw", 110, 400, { continued: true })
-      .fontSize(12)
-      .text("Wringinpitu", 130, null);
-
-    const alamattext =
-      "desa wringin pitu kecamatan tegaldlimo kabupaten banyuwangi provinsi jawatimur".repeat(
-        3
-      );
-
-    const [line, result] = checkLengthAlamat(
-      alamattext.length < 200 ? alamattext : `${alamattext.slice(0, 200)} ... `
-    );
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Alamat", 105, 420, { continued: true })
-      .fontSize(12)
-      .text(result, 127, 420, { lineGap: 5 });
-
-    doc.strokeColor("gray");
-    doc.lineWidth(0.5);
-    doc
-      .moveTo(50, 440 + line)
-      .lineTo(550, 440 + line)
-      .stroke();
-    doc
-      .font("Times-Bold")
-      .fontSize(12)
-      .text("Sekolah", 50, 450 + line)
-      .moveDown(0.8);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Sekolah Asal", 80, null, { continued: true })
-      .fontSize(12)
-      .text("SMA", 102)
-      .moveDown(0.5);
-
-    doc
-      .fontSize(11)
-      .text("Jurusan", 105, null, { continued: true })
-      .fontSize(12)
-      .text("Teknik Komputer dan Jaringan", 127, null)
-      .moveDown(0.5);
-
-    doc
-      .fontSize(11)
-      .text("Tahun Lulus", 83, null, { continued: true })
-      .fontSize(12)
-      .text("2024", 106, null)
-      .moveDown(0.5);
-
-    doc
-      .fontSize(11)
-      .text("Nama Sekolah Asal", 53, null, { continued: true })
-      .fontSize(12)
-      .text("SMK GIRi", 74, null)
-      .moveDown(0.5);
-
-    doc
-      .fontSize(11)
-      .text("NISN", 115, null, { continued: true })
-      .fontSize(12)
-      .text("2024878787878", 135, null)
-      .moveDown(0.5);
-
-    doc.strokeColor("gray");
-    doc.lineWidth(0.5);
-    doc
-      .moveTo(50, 575 + line)
-      .lineTo(550, 575 + line)
-      .stroke();
-    doc
-      .font("Times-Bold")
-      .fontSize(12)
-      .text("Data Tambahan", 50, 585 + line)
-      .moveDown(0.8);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Ukuran Kos", 88, null, { continued: true })
-      .fontSize(12)
-      .text("2024878787878", 110, null)
-      .moveDown(0.5);
-
-    doc
-      .font("Times-Roman")
-      .fontSize(11)
-      .text("Ukuran Alamamater", 52, null, { continued: true })
-      .fontSize(12)
-      .text("2024878787878", 73, null)
-      .moveDown(2);
-
-    doc
-      .font("Times-Bold")
-      .fontSize(11)
-      .text(
-        "Bank Mandiri : 143-002-006-0008 atas nama STIKOM PGRI BANYUWANGI",
-        140,
-        null
-      );
-
-    res.setHeader("Content-Type", "application/pdf");
-
-    doc.pipe(res);
-    doc.end();
-
-    // res.attachment("data.pdf");
+    res.status(200).send({ message: "pendaftaran berhasil" });
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    next(error);
   }
 };
 
@@ -342,17 +176,237 @@ export const getBuktiPendaftaran = async (req, res, next) => {
     if (!data) {
       return res.status(404).json({ message: "data not found" });
     }
-    const browser = await puppeteer.launch({ headless: "new" });
-    const page = await browser.newPage();
+    const doc = new PDFDocument();
 
-    await page.setContent(html);
-    const pdfBuffer = await page.pdf();
+    doc.page.margins = { top: 50, left: 50, bottom: 50, right: 50 };
+    doc.image(path.resolve(__dirname, "../../public/logo.jpeg"), 100, 15, {
+      width: 80,
+    });
 
-    await browser.close();
+    doc
+      .font("Times-Bold")
+      .fontSize(12)
+      .text("PPLP PT – PGRI BANYUWANGI", 190, 25)
+      .fontSize(18)
+      .text("Stikom PGRI Banyuwangi | ", 190, 40, { continued: true })
+      .fontSize(10)
+      .font("Times-Roman")
+      .text("www.stikombanyuwangi.ac.id", null, 50, { underline: true });
+
+    doc
+      .fontSize(12)
+      .text(
+        "Jl. Jend. A. Yani No. 80 Telp. (0333) 417902 Banyuwangi 68416",
+        null,
+        65
+      );
+
+    doc.moveTo(50, 100).lineTo(550, 100).stroke();
+
+    doc
+      .font("Times-Bold")
+      .fontSize(12)
+      .text("Pendaftaran Mahasiswa Baru Periode 2024-2025", 50, 120);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Jalur Pendaftaran", 50, 150, { continued: true })
+      .fontSize(12)
+      .text(data.jalurPendaftaran, 80, null, { continued: true })
+      .fontSize(11)
+      .text("Tipe pendaftaran", 180, null, { continued: true })
+      .fontSize(12)
+      .text(data.SumberForm, 200);
+
+    doc.strokeColor("gray");
+    doc.lineWidth(0.5);
+    doc.moveTo(50, 170).lineTo(550, 170).stroke();
+    doc.font("Times-Bold").fontSize(12).text("Data Diri", 50, 180);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("NIK", 120, null, { continued: true })
+      .fontSize(12)
+      .text(data.nik, 140, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Nama Lengkap", 72, 215, { continued: true })
+      .fontSize(12)
+      .text(data?.dataDiri?.namaLengkap, 92);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Tempat Lahir", 79, 235, { continued: true })
+      .fontSize(12)
+      .text("banyuwangi", 100, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Jenis Kelamin", 76, 255, { continued: true })
+      .fontSize(12)
+      .text(data?.dataDiri?.jenisKelamin, 97, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Agama", 106, 275, { continued: true })
+      .fontSize(12)
+      .text(data?.dataDiri?.agama, 128, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("No. Whatsapp", 76, 295, { continued: true })
+      .fontSize(12)
+      .text(data?.dataDiri?.noWA, 95, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Email", 112, 315, { continued: true })
+      .fontSize(12)
+      .text(data?.dataDiri?.email, 132, null);
+
+    doc.strokeColor("gray");
+    doc.lineWidth(0.5);
+    doc.moveTo(50, 335).lineTo(550, 335).stroke();
+    doc.font("Times-Bold").fontSize(12).text("Alamat", 50, 345);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Provinsi", 102, 360, { continued: true })
+      .fontSize(12)
+      .text(data?.alamat?.provinsi, 123, 360, { continued: true })
+      .fontSize(11)
+      .text("Kabupaten", 250, 360, { continued: true })
+      .fontSize(12)
+      .text("Banyuwangi", 270, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Kecamatan", 90, 380, { continued: true })
+      .fontSize(12)
+      .text(data?.alamat?.kecamatan, 110, 380, { continued: true })
+      .fontSize(11)
+      .text("Desa", 263, 380, { continued: true })
+      .fontSize(12)
+      .text(data?.alamat?.desa, 283, null);
+
+    doc
+      .fontSize(11)
+      .text("Rt/Rw", 110, 400, { continued: true })
+      .fontSize(12)
+      .text(`${data?.alamat?.rt}/${data?.alamat?.rw}`, 130, null);
+
+    const alamattext = data?.alamat?.detilAlamat;
+    const [line, result] = checkLengthAlamat(
+      alamattext.length < 200 ? alamattext : `${alamattext.slice(0, 200)} ... `
+    );
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Alamat", 105, 420, { continued: true })
+      .fontSize(12)
+      .text(result, 127, 420, { lineGap: 5 });
+
+    doc.strokeColor("gray");
+    doc.lineWidth(0.5);
+    doc
+      .moveTo(50, 440 + line)
+      .lineTo(550, 440 + line)
+      .stroke();
+    doc
+      .font("Times-Bold")
+      .fontSize(12)
+      .text("Sekolah", 50, 450 + line)
+      .moveDown(0.8);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Sekolah Asal", 80, null, { continued: true })
+      .fontSize(12)
+      .text(data?.sekolah?.sekolahAsal, 102)
+      .moveDown(0.5);
+
+    doc
+      .fontSize(11)
+      .text("Jurusan", 105, null, { continued: true })
+      .fontSize(12)
+      .text(data?.sekolah?.jurusan, 127, null)
+      .moveDown(0.5);
+
+    doc
+      .fontSize(11)
+      .text("Tahun Lulus", 83, null, { continued: true })
+      .fontSize(12)
+      .text(data?.sekolah?.tahunLulus, 106, null)
+      .moveDown(0.5);
+
+    doc
+      .fontSize(11)
+      .text("Nama Sekolah Asal", 53, null, { continued: true })
+      .fontSize(12)
+      .text(data?.sekolah?.namaSekolah, 74, null)
+      .moveDown(0.5);
+
+    doc
+      .fontSize(11)
+      .text("NISN", 115, null, { continued: true })
+      .fontSize(12)
+      .text(data?.sekolah?.nisn, 135, null)
+      .moveDown(0.5);
+
+    doc.strokeColor("gray");
+    doc.lineWidth(0.5);
+    doc
+      .moveTo(50, 575 + line)
+      .lineTo(550, 575 + line)
+      .stroke();
+    doc
+      .font("Times-Bold")
+      .fontSize(12)
+      .text("Data Tambahan", 50, 585 + line)
+      .moveDown(0.8);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Ukuran Kos", 88, null, { continued: true })
+      .fontSize(12)
+      .text(data?.dataTambahan?.ukuranKaos, 110, null)
+      .moveDown(0.5);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Ukuran Alamamater", 52, null, { continued: true })
+      .fontSize(12)
+      .text(data?.dataTambahan?.ukuranKaos, 73, null)
+      .moveDown(2);
+
+    doc
+      .font("Times-Bold")
+      .fontSize(11)
+      .text(
+        "Bank Mandiri : 143-002-006-0008 atas nama STIKOM PGRI BANYUWANGI",
+        140,
+        null
+      );
 
     res.setHeader("Content-Type", "application/pdf");
-    res.attachment("data.pdf");
-    res.send(pdfBuffer);
+
+    doc.pipe(res);
+    doc.end();
   } catch (err) {
     next(err);
   }

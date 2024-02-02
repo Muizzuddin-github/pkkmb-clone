@@ -14,8 +14,8 @@ mongoose
 
 const app = express();
 app.use(cors());
-app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
+express(express.static("public"));
 // middlewares
 app.use(express.json());
 
