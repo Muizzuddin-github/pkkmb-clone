@@ -5,6 +5,10 @@ import html from "../utility/html.js";
 import Email from "../utility/email.js";
 import PDFDocument from "pdfkit";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const getForm = async (req, res, next) => {
   try {
@@ -16,8 +20,11 @@ export const getForm = async (req, res, next) => {
 
 export const tambahForm = async (req, res) => {
   try {
+    console.log(__dirname);
     const doc = new PDFDocument();
-    doc.image(`/public/download.jpeg`, 100, 15, { width: 80 });
+    doc.image(path.resolve(__dirname, "../../public/download.jpeg"), 100, 15, {
+      width: 80,
+    });
 
     doc
       .font("Times-Bold")
