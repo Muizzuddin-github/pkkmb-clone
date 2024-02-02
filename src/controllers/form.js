@@ -1,8 +1,9 @@
 import { createObjectCsvStringifier } from "csv-writer";
 import dataMahasiswa from "../models/model.js";
-import puppeteer from "puppeteer";
+// import puppeteer from "puppeteer";
 import html from "../utility/html.js";
 import Email from "../utility/email.js";
+import chromium from "chrome-aws-lambda";
 
 export const getForm = async (req, res, next) => {
   try {
@@ -69,7 +70,15 @@ export const tambahForm = async (req, res) => {
 
     await formData.save();
 
-    const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await chromium.puppeteer.launch({
+      args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
+      headless: "new",
+      ignoreHTTPSErrors: true,
+    });
+
+    // const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
 
     await page.setContent(html);
