@@ -295,9 +295,9 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(12)
       .text(data?.alamat?.kecamatan, 110, 380, { continued: true })
       .fontSize(11)
-      .text("Desa", 263, 380, { continued: true })
+      .text("Desa", 260, 380, { continued: true })
       .fontSize(12)
-      .text(data?.alamat?.desa, 283, null);
+      .text(data?.alamat?.desa, 280, null);
 
     doc
       .fontSize(11)
