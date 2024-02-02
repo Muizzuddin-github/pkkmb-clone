@@ -4,6 +4,7 @@ import dataMahasiswa from "../models/model.js";
 import html from "../utility/html.js";
 import Email from "../utility/email.js";
 import PDFDocument from "pdfkit";
+import path from "path";
 
 export const getForm = async (req, res, next) => {
   try {
@@ -16,15 +17,60 @@ export const getForm = async (req, res, next) => {
 export const tambahForm = async (req, res) => {
   try {
     const doc = new PDFDocument();
+    doc.image(`${process.cwd()}/public/download.jpeg`, 100, 15, { width: 80 });
 
-    // Menulis konten ke dalam dokumen PDF
-    doc.fontSize(20).text("Contoh Dokumen PDF", { align: "center" });
     doc
-      .fontSize(14)
+      .font("Times-Bold")
+      .fontSize(12)
+      .text("PPLP PT – PGRI BANYUWANGI", 190, 25)
+      .fontSize(18)
+      .text("Stikom PGRI Banyuwangi | ", 190, 40, { continued: true })
+      .fontSize(10)
+      .font("Times-Roman")
+      .text("www.stikombanyuwangi.ac.id", null, 50, { underline: true });
+
+    doc
+      .fontSize(12)
       .text(
-        "Ini adalah contoh dokumen PDF yang dihasilkan menggunakan PDFKit.",
-        { align: "center" }
+        "Jl. Jend. A. Yani No. 80 Telp. (0333) 417902 Banyuwangi 68416",
+        null,
+        65
       );
+
+    doc.moveTo(50, 100).lineTo(550, 100).stroke();
+
+    doc
+      .font("Times-Bold")
+      .fontSize(12)
+      .text("Pendaftaran Mahasiswa Baru Periode 2024-2025", 50, 120);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Jalur Pendaftaran", 50, 150, { continued: true })
+      .fontSize(12)
+      .text("S1 Reguler Pagi", 80, null);
+
+    doc.strokeColor("gray");
+    doc.lineWidth(0.5);
+    doc.moveTo(50, 170).lineTo(550, 170).stroke();
+    doc.font("Times-Bold").fontSize(12).text("Data Diri", 50, 180);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("NIK", 120, null, { continued: true })
+      .fontSize(12)
+      .text("8942930894", 140, null);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Nama Lengkap", 72, 220, { continued: true })
+      .fontSize(12)
+      .text("hasankuy", 90);
+
+    doc.font("Times-Roman").text("Tempat Lahir");
 
     res.setHeader("Content-Type", "application/pdf");
     doc.pipe(res);
