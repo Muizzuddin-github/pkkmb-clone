@@ -3,8 +3,7 @@ import dataMahasiswa from "../models/model.js";
 // import puppeteer from "puppeteer";
 import html from "../utility/html.js";
 import Email from "../utility/email.js";
-import chromium from "chrome-aws-lambda";
-import puppeteer from "puppeteer";
+import { jsPDF } from "jspdf";
 
 export const getForm = async (req, res, next) => {
   try {
@@ -68,28 +67,16 @@ export const tambahForm = async (req, res) => {
         ukuranAlmamater,
       },
     });
+    const doc = new jsPDF();
 
-    // await formData.save();
+    // Tambahkan konten ke dalam dokumen PDF
+    doc.text("Contoh PDF yang Dibuat dengan Express dan jsPDF", 10, 10);
 
-    // const browser = await chromium.puppeteer.launch({
-    //   args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath,
-    //   headless: true,
-    //   ignoreHTTPSErrors: true,
-    // });
-
-    const browser = await puppeteer.launch({ headless: "new" });
-    const page = await browser.newPage();
-
-    await page.setContent(html);
-    const pdfBuffer = await page.pdf();
-
-    await browser.close();
-
+    // Simpan dokumen PDF sebagai buffer
+    const buffer = doc.output();
     res.setHeader("Content-Type", "application/pdf");
     res.attachment("data.pdf");
-    res.send(pdfBuffer);
+    res.send(buffer);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
