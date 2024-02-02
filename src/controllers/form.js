@@ -69,24 +69,17 @@ export const tambahForm = async (req, res) => {
 
     await formData.save();
 
-    const url = `${req.protocol}://${req.hostname}/api/form/bukti-pendaftaran/${nik}`;
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
 
-    const sendEmail = new Email({
-      from: "POS",
-      to: email,
-      subject: "Bukti Pendaftaran Stikom PGRI Banyuwangi",
-      html: `
-        <img src="https://iili.io/JcymQv2.png" alt="stikompgribanyuwangi">
-        <p style="font-size: 20px;">Hi!</p>
-        <p  style="font-size: 20px;">download bukti pendaftaran <span style="color : #4053df;  font-weight: bold;">${url}</span>.</p>
-        <p style="font-size:20px; font-weight:bold; font-family:sans-serif; letter-spacing:2px;">
-          Stikom PGRI Banyuwangi
-        </p>`,
-    });
+    await page.setContent(html);
+    const pdfBuffer = await page.pdf();
 
-    await sendEmail.send();
+    await browser.close();
 
-    res.status(200).send({ message: "Upload Success dan periksa email anda" });
+    res.setHeader("Content-Type", "application/pdf");
+    res.attachment("data.pdf");
+    res.send(pdfBuffer);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
