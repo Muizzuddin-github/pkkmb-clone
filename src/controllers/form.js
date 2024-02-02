@@ -74,7 +74,6 @@ export const tambahForm = async (req, res, next) => {
     await formData.save();
 
     const url = `${req.protocol}://${req.hostname}/api/form/bukti-pendaftaran/${nik}`;
-
     const sendEmail = new Email({
       from: "POS",
       to: email,
