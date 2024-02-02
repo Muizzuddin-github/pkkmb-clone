@@ -21,8 +21,9 @@ export const getForm = async (req, res, next) => {
 
 export const tambahForm = async (req, res) => {
   try {
-    console.log(__dirname);
     const doc = new PDFDocument();
+
+    doc.page.margins = { top: 50, left: 50, bottom: 50, right: 50 };
     doc.image(path.resolve(__dirname, "../../public/download.jpeg"), 100, 15, {
       width: 80,
     });
@@ -57,7 +58,11 @@ export const tambahForm = async (req, res) => {
       .fontSize(11)
       .text("Jalur Pendaftaran", 50, 150, { continued: true })
       .fontSize(12)
-      .text("S1 Reguler Pagi", 80, null);
+      .text("S1 Reguler Pagi", 80, null, { continued: true })
+      .fontSize(11)
+      .text("Tipe pendaftaran", 180, null, { continued: true })
+      .fontSize(12)
+      .text("Diskon", 200);
 
     doc.strokeColor("gray");
     doc.lineWidth(0.5);
@@ -140,22 +145,114 @@ export const tambahForm = async (req, res) => {
       .fontSize(12)
       .text("Wringinpitu", 283, null);
 
+    doc
+      .fontSize(11)
+      .text("Rt/Rw", 110, 400, { continued: true })
+      .fontSize(12)
+      .text("Wringinpitu", 130, null);
+
     const alamattext =
-      "dasdsadasdasdsdasdadsadasadasakdlaskdlaskdldasdasdsadsadasdsadsaddasdsadasdsadsadsddsadasdsaddsadasddsadaasdasdasdasdasdsadasdasdasdasdasdsadasdasdasdasdasdasdasdasdaasdasdasdasdasdasdsdasdasdadasdas dsdadasdsd asdasdas asdasdas asdasdas sadasskadk";
+      "desa wringin pitu kecamatan tegaldlimo kabupaten banyuwangi provinsi jawatimur".repeat(
+        3
+      );
+
+    const [line, result] = checkLengthAlamat(
+      alamattext.length < 200 ? alamattext : `${alamattext.slice(0, 200)} ... `
+    );
     doc
       .font("Times-Roman")
       .fontSize(11)
-      .text("Alamat", 105, 400, { continued: true })
+      .text("Alamat", 105, 420, { continued: true })
       .fontSize(12)
-      .text(checkLengthAlamat(alamattext), 127, 400, { lineGap: 5 });
+      .text(result, 127, 420, { lineGap: 5 });
+
+    doc.strokeColor("gray");
+    doc.lineWidth(0.5);
+    doc
+      .moveTo(50, 440 + line)
+      .lineTo(550, 440 + line)
+      .stroke();
+    doc
+      .font("Times-Bold")
+      .fontSize(12)
+      .text("Sekolah", 50, 450 + line)
+      .moveDown(0.8);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Sekolah Asal", 80, null, { continued: true })
+      .fontSize(12)
+      .text("SMA", 102)
+      .moveDown(0.5);
 
     doc
       .fontSize(11)
-      .text("Desa", 363, 400, { continued: true })
+      .text("Jurusan", 105, null, { continued: true })
       .fontSize(12)
-      .text("Wringinpitu", 383, null);
+      .text("Teknik Komputer dan Jaringan", 127, null)
+      .moveDown(0.5);
+
+    doc
+      .fontSize(11)
+      .text("Tahun Lulus", 83, null, { continued: true })
+      .fontSize(12)
+      .text("2024", 106, null)
+      .moveDown(0.5);
+
+    doc
+      .fontSize(11)
+      .text("Nama Sekolah Asal", 53, null, { continued: true })
+      .fontSize(12)
+      .text("SMK GIRi", 74, null)
+      .moveDown(0.5);
+
+    doc
+      .fontSize(11)
+      .text("NISN", 115, null, { continued: true })
+      .fontSize(12)
+      .text("2024878787878", 135, null)
+      .moveDown(0.5);
+
+    doc.strokeColor("gray");
+    doc.lineWidth(0.5);
+    doc
+      .moveTo(50, 575 + line)
+      .lineTo(550, 575 + line)
+      .stroke();
+    doc
+      .font("Times-Bold")
+      .fontSize(12)
+      .text("Data Tambahan", 50, 585 + line)
+      .moveDown(0.8);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Ukuran Kos", 88, null, { continued: true })
+      .fontSize(12)
+      .text("2024878787878", 110, null)
+      .moveDown(0.5);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Ukuran Alamamater", 52, null, { continued: true })
+      .fontSize(12)
+      .text("2024878787878", 73, null)
+      .moveDown(2);
+
+    doc
+      .font("Times-Bold")
+      .fontSize(11)
+      .text(
+        "Bank Mandiri : 143-002-006-0008 atas nama STIKOM PGRI BANYUWANGI",
+        140,
+        null
+      );
 
     res.setHeader("Content-Type", "application/pdf");
+
     doc.pipe(res);
     doc.end();
 
