@@ -3,7 +3,7 @@ import dataMahasiswa from "../models/model.js";
 // import puppeteer from "puppeteer";
 import html from "../utility/html.js";
 import Email from "../utility/email.js";
-import { jsPDF } from "jspdf";
+import PDFDocument from "pdfkit";
 
 export const getForm = async (req, res, next) => {
   try {
@@ -15,68 +15,22 @@ export const getForm = async (req, res, next) => {
 
 export const tambahForm = async (req, res) => {
   try {
-    const {
-      nik,
-      jalurPendaftaran,
-      SumberForm,
-      dataDiri: {
-        namaLengkap,
-        tempatLahir,
-        tanggalLahir,
-        jenisKelamin,
-        agama,
-        email,
-        noWA,
-      },
-      alamat: { provinsi, kecamatan, detilAlamat, kabupaten, desa, rt, rw },
-      sekolah: { sekolahAsal, tahunLulus, jurusan, namaSekolah, nisn },
-      dataTambahan: { ukuranKaos, ukuranAlmamater },
-    } = req.body;
+    const doc = new PDFDocument();
 
-    const formData = new dataMahasiswa({
-      nik,
-      jalurPendaftaran,
-      SumberForm,
-      dataDiri: {
-        namaLengkap,
-        tempatLahir,
-        tanggalLahir,
-        jenisKelamin,
-        agama,
-        email,
-        noWA,
-      },
-      alamat: {
-        provinsi,
-        kecamatan,
-        detilAlamat,
-        kabupaten,
-        desa,
-        rt,
-        rw,
-      },
-      sekolah: {
-        sekolahAsal,
-        tahunLulus,
-        jurusan,
-        namaSekolah,
-        nisn,
-      },
-      dataTambahan: {
-        ukuranKaos,
-        ukuranAlmamater,
-      },
-    });
-    const doc = new jsPDF();
+    // Menulis konten ke dalam dokumen PDF
+    doc.fontSize(20).text("Contoh Dokumen PDF", { align: "center" });
+    doc
+      .fontSize(14)
+      .text(
+        "Ini adalah contoh dokumen PDF yang dihasilkan menggunakan PDFKit.",
+        { align: "center" }
+      );
 
-    // Tambahkan konten ke dalam dokumen PDF
-    doc.text("Contoh PDF yang Dibuat dengan Express dan jsPDF", 10, 10);
-
-    // Simpan dokumen PDF sebagai buffer
-    const buffer = doc.output();
     res.setHeader("Content-Type", "application/pdf");
-    res.attachment("data.pdf");
-    res.send(buffer);
+    doc.pipe(res);
+    doc.end();
+
+    // res.attachment("data.pdf");
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
