@@ -73,7 +73,7 @@ export const tambahForm = async (req, res, next) => {
 
     await formData.save();
 
-    const url = `${req.protocol}://${req.hostname}/api/form/bukti-pendaftaran/${nik}`;
+    const url = `https://${req.hostname}/api/form/bukti-pendaftaran/${nik}`;
     const sendEmail = new Email({
       from: "POS",
       to: email,
@@ -81,7 +81,7 @@ export const tambahForm = async (req, res, next) => {
       html: `
         <img src="https://iili.io/JcymQv2.png" alt="stikompgribanyuwangi">
         <p style="font-size: 20px;">Hi!</p>
-        <p  style="font-size: 20px;">download bukti pendaftaran <span style="color : #4053df;  font-weight: bold;"><a href="https://${url}" target="_blank">klik</a></span>.</p>
+        <p  style="font-size: 20px;">download bukti pendaftaran <span style="color : #4053df;  font-weight: bold;"><a href="${url}" target="_blank">klik</a></span>.</p>
         <p style="font-size:20px; font-weight:bold; font-family:sans-serif; letter-spacing:2px;">
           Stikom PGRI Banyuwangi
         </p>`,
