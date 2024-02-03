@@ -403,7 +403,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       );
 
     res.setHeader("Content-Type", "application/pdf");
-
+    res.attachment("bukti-pendaftaran.pdf");
     doc.pipe(res);
     doc.end();
   } catch (err) {
