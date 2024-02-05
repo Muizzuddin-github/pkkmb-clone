@@ -433,7 +433,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       );
 
     res.setHeader("Content-Type", "application/pdf");
-    // res.attachment("bukti-pembayaran.pdf");
+    res.attachment("bukti-pembayaran.pdf");
     doc.pipe(res);
     doc.end();
   } catch (err) {
