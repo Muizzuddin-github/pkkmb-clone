@@ -282,28 +282,35 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(11)
       .text("Provinsi", 102, 360, { continued: true })
       .fontSize(12)
-      .text(data?.alamat?.provinsi, 123, 360, { continued: true })
+      .text(data?.alamat?.provinsi, 123, 360);
+
+    doc
       .fontSize(11)
-      .text("Kabupaten", 250, 360, { continued: true })
+      .text("Kabupaten", 345, 360, { continued: true })
       .fontSize(12)
-      .text("Banyuwangi", 270, null);
+      .text("Banyuwangi", 363, null)
+      .moveDown(0.5);
 
     doc
       .font("Times-Roman")
       .fontSize(11)
-      .text("Kecamatan", 90, 380, { continued: true })
+      .text("Kecamatan", 90, null, { continued: true })
       .fontSize(12)
-      .text(data?.alamat?.kecamatan, 110, 380, { continued: true })
-      .fontSize(11)
-      .text("Desa", 300, 380, { continued: true })
-      .fontSize(12)
-      .text(data?.alamat?.desa, 322, null);
+      .text(data?.alamat?.kecamatan, 110, 380);
 
     doc
       .fontSize(11)
-      .text("Rt/Rw", 110, 400, { continued: true })
+      .text("Desa", 370, 380, { continued: true })
       .fontSize(12)
-      .text(`${data?.alamat?.rt}/${data?.alamat?.rw}`, 130, null);
+      .text(data?.alamat?.desa, 390, null)
+      .moveDown(0.5);
+
+    doc
+      .fontSize(11)
+      .text("Rt/Rw", 110, null, { continued: true })
+      .fontSize(12)
+      .text(`${data?.alamat?.rt}/${data?.alamat?.rw}`, 130, null)
+      .moveDown(0.5);
 
     const alamattext = data?.alamat?.detilAlamat;
     const [line, result] = checkLengthAlamat(alamattext);
@@ -311,7 +318,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
     doc
       .font("Times-Roman")
       .fontSize(11)
-      .text("Alamat", 105, 420, { continued: true })
+      .text("Alamat", 105, null, { continued: true })
       .fontSize(12)
       .text(result, 127, 420, { lineGap: 5 });
 
@@ -401,7 +408,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       );
 
     res.setHeader("Content-Type", "application/pdf");
-    // res.attachment("bukti-pembayaran.pdf");
+    res.attachment("bukti-pembayaran.pdf");
     doc.pipe(res);
     doc.end();
   } catch (err) {
