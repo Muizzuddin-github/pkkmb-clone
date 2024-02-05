@@ -274,7 +274,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(11)
       .text("No Tepl", 106, null, { continued: true })
       .fontSize(12)
-      .text(data?.dataDiri?.noTelp, 128, null)
+      .text(data?.dataDiri?.noTelp, 125, null)
       .moveDown(0.5);
 
     doc
@@ -282,7 +282,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(11)
       .text("No. Whatsapp", 76, null, { continued: true })
       .fontSize(12)
-      .text(data?.dataDiri?.noWA, 95, null)
+      .text(data?.dataDiri?.noWA, 98, null)
       .moveDown(0.5);
 
     doc
@@ -290,7 +290,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(11)
       .text("Email", 112, null, { continued: true })
       .fontSize(12)
-      .text(data?.dataDiri?.email, 132, null);
+      .text(data?.dataDiri?.email, 135, null);
 
     doc.strokeColor("gray");
     doc.lineWidth(0.5);
