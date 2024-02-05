@@ -204,7 +204,10 @@ export const getBuktiPendaftaran = async (req, res, next) => {
         65
       );
 
-    doc.moveTo(50, 100).lineTo(550, 100).stroke();
+    doc
+      .moveTo(50, doc.y + 20)
+      .lineTo(550, doc.y + 20)
+      .stroke();
 
     doc
       .font("Times-Bold")
@@ -224,7 +227,10 @@ export const getBuktiPendaftaran = async (req, res, next) => {
 
     doc.strokeColor("gray");
     doc.lineWidth(0.5);
-    doc.moveTo(50, 170).lineTo(550, 170).stroke();
+    doc
+      .moveTo(50, doc.y + 10)
+      .lineTo(550, doc.y + 10)
+      .stroke();
     doc.font("Times-Bold").fontSize(12).text("Data Diri", 50, 180);
 
     doc
@@ -260,21 +266,24 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(11)
       .text("Agama", 106, 275, { continued: true })
       .fontSize(12)
-      .text(data?.dataDiri?.agama, 128, null).moveDown(0.5)
+      .text(data?.dataDiri?.agama, 128, null)
+      .moveDown(0.5);
 
     doc
       .font("Times-Roman")
       .fontSize(11)
       .text("No Tepl", 106, null, { continued: true })
       .fontSize(12)
-      .text(data?.dataDiri?.noTelp, 128, null).moveDown(0.5)
+      .text(data?.dataDiri?.noTelp, 128, null)
+      .moveDown(0.5);
 
     doc
       .font("Times-Roman")
       .fontSize(11)
       .text("No. Whatsapp", 76, null, { continued: true })
       .fontSize(12)
-      .text(data?.dataDiri?.noWA, 95, null).moveDown(0.5)
+      .text(data?.dataDiri?.noWA, 95, null)
+      .moveDown(0.5);
 
     doc
       .font("Times-Roman")
@@ -285,64 +294,71 @@ export const getBuktiPendaftaran = async (req, res, next) => {
 
     doc.strokeColor("gray");
     doc.lineWidth(0.5);
-    doc.moveTo(50, 355).lineTo(550, 355).stroke();
-    doc.font("Times-Bold").fontSize(12).text("Alamat", 50, 365);
+    doc
+      .moveTo(50, doc.y + 10)
+      .lineTo(550, doc.y + 10)
+      .stroke();
+    doc.font("Times-Bold").fontSize(12).text("Alamat", 50, 365).moveDown(0.5);
 
     doc
       .font("Times-Roman")
       .fontSize(11)
-      .text("Provinsi", 102, 370, { continued: true })
+      .text("Provinsi", 102, null, { continued: true })
       .fontSize(12)
-      .text(data?.alamat?.provinsi, 123, 360);
+      .text(data?.alamat?.provinsi, 123, null);
 
     doc
       .fontSize(11)
-      .text("Kabupaten", 345, 360, { continued: true })
+      .text("Kabupaten", 345, 390, { continued: true })
       .fontSize(12)
-      .text("Banyuwangi", 363, null)
+      .text(data?.alamat?.kabupaten, 363, null)
       .moveDown(0.5);
 
     doc
+      .moveUp(0.5)
       .font("Times-Roman")
       .fontSize(11)
       .text("Kecamatan", 90, null, { continued: true })
       .fontSize(12)
-      .text(data?.alamat?.kecamatan, 110, 380);
+      .text(data?.alamat?.kecamatan, 110, null);
 
     doc
       .fontSize(11)
-      .text("Desa", 370, 380, { continued: true })
+      .text("Desa", 370, 410, { continued: true })
       .fontSize(12)
       .text(data?.alamat?.desa, 390, null)
       .moveDown(0.5);
 
     doc
+      .moveUp(0.5)
       .fontSize(11)
       .text("Rt/Rw", 110, null, { continued: true })
       .fontSize(12)
       .text(`${data?.alamat?.rt}/${data?.alamat?.rw}`, 130, null)
-      .moveDown(0.5);
+      .moveDown(1);
 
     const alamattext = data?.alamat?.detilAlamat;
-    const [line, result] = checkLengthAlamat(alamattext);
+    const result = checkLengthAlamat(alamattext);
 
     doc
+      .moveUp(0.5)
       .font("Times-Roman")
       .fontSize(11)
       .text("Alamat", 105, null, { continued: true })
       .fontSize(12)
-      .text(result, 127, 420, { lineGap: 5 });
+      .text(result, 127, null, { lineGap: 5 });
 
     doc.strokeColor("gray");
     doc.lineWidth(0.5);
     doc
-      .moveTo(50, 440 + line)
-      .lineTo(550, 440 + line)
+      .moveTo(50, doc.y + 5)
+      .lineTo(550, doc.y + 5)
       .stroke();
     doc
+      .moveUp(-1)
       .font("Times-Bold")
       .fontSize(12)
-      .text("Sekolah", 50, 450 + line)
+      .text("Sekolah", 50, null)
       .moveDown(0.8);
 
     doc
@@ -383,14 +399,12 @@ export const getBuktiPendaftaran = async (req, res, next) => {
 
     doc.strokeColor("gray");
     doc.lineWidth(0.5);
+    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
     doc
-      .moveTo(50, 575 + line)
-      .lineTo(550, 575 + line)
-      .stroke();
-    doc
+      .moveUp(-0.5)
       .font("Times-Bold")
       .fontSize(12)
-      .text("Data Tambahan", 50, 585 + line)
+      .text("Data Tambahan", 50, null)
       .moveDown(0.8);
 
     doc
