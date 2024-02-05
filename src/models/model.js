@@ -26,6 +26,10 @@ const schemaDataDiri = mongoose.Schema({
     required: true,
     unique: true,
   },
+  noTelp: {
+    type: String,
+    required: true,
+  },
   noWA: {
     type: String,
     required: true,

@@ -29,6 +29,7 @@ export const tambahForm = async (req, res, next) => {
         jenisKelamin,
         agama,
         email,
+        noTelp,
         noWA,
       },
       alamat: { provinsi, kecamatan, detilAlamat, kabupaten, desa, rt, rw },
@@ -47,6 +48,7 @@ export const tambahForm = async (req, res, next) => {
         jenisKelamin,
         agama,
         email,
+        noTelp,
         noWA,
       },
       alamat: {
@@ -111,6 +113,7 @@ export const downloadForm = async (req, res, next) => {
         "jenis kelamin": mahasiswas[i].dataDiri.jenisKelamin,
         agama: mahasiswas[i].dataDiri.agama,
         email: mahasiswas[i].dataDiri.email,
+        "no telephone": mahasiswas[i].dataDiri.noTelp,
         "no wa": mahasiswas[i].dataDiri.noWA,
         provinsi: mahasiswas[i].alamat.provinsi,
         kecamatan: mahasiswas[i].alamat.kecamatan,
@@ -141,6 +144,7 @@ export const downloadForm = async (req, res, next) => {
         { id: "jenis kelamin", title: "Jenis Kelamin" },
         { id: "agama", title: "Agama" },
         { id: "email", title: "Email" },
+        { id: "no telephone", title: "No Telp" },
         { id: "no wa", title: "No WA" },
         { id: "provinsi", title: "Provinsi" },
         { id: "kecamatan", title: "Kecamatan" },
@@ -256,31 +260,38 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(11)
       .text("Agama", 106, 275, { continued: true })
       .fontSize(12)
-      .text(data?.dataDiri?.agama, 128, null);
+      .text(data?.dataDiri?.agama, 128, null).moveDown(0.5)
 
     doc
       .font("Times-Roman")
       .fontSize(11)
-      .text("No. Whatsapp", 76, 295, { continued: true })
+      .text("No Tepl", 106, null, { continued: true })
       .fontSize(12)
-      .text(data?.dataDiri?.noWA, 95, null);
+      .text(data?.dataDiri?.noTelp, 128, null).moveDown(0.5)
 
     doc
       .font("Times-Roman")
       .fontSize(11)
-      .text("Email", 112, 315, { continued: true })
+      .text("No. Whatsapp", 76, null, { continued: true })
+      .fontSize(12)
+      .text(data?.dataDiri?.noWA, 95, null).moveDown(0.5)
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Email", 112, null, { continued: true })
       .fontSize(12)
       .text(data?.dataDiri?.email, 132, null);
 
     doc.strokeColor("gray");
     doc.lineWidth(0.5);
-    doc.moveTo(50, 335).lineTo(550, 335).stroke();
-    doc.font("Times-Bold").fontSize(12).text("Alamat", 50, 345);
+    doc.moveTo(50, 355).lineTo(550, 355).stroke();
+    doc.font("Times-Bold").fontSize(12).text("Alamat", 50, 365);
 
     doc
       .font("Times-Roman")
       .fontSize(11)
-      .text("Provinsi", 102, 360, { continued: true })
+      .text("Provinsi", 102, 370, { continued: true })
       .fontSize(12)
       .text(data?.alamat?.provinsi, 123, 360);
 
@@ -408,7 +419,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       );
 
     res.setHeader("Content-Type", "application/pdf");
-    res.attachment("bukti-pembayaran.pdf");
+    // res.attachment("bukti-pembayaran.pdf");
     doc.pipe(res);
     doc.end();
   } catch (err) {
