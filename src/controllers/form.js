@@ -205,8 +205,8 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       );
 
     doc
-      .moveTo(50, doc.y + 20)
-      .lineTo(550, doc.y + 20)
+      .moveTo(50, doc.y + 25)
+      .lineTo(550, doc.y + 25)
       .stroke();
 
     doc
