@@ -117,12 +117,24 @@ const schemaForm1 = mongoose.Schema({
     type: Number,
     required: true,
   },
-  
+
   dataDiri: schemaDataDiri,
   alamat: schemaAlamat,
   sekolah: schemaSekolah,
   dataTambahan: schemaDataTambahan,
+  totalPembayaran: {
+    type: Number,
+    required: true,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const dataMahasiwa = mongoose.model("dataMahasiswa", schemaForm1, "dataMahasiswa");
+const dataMahasiwa = mongoose.model(
+  "dataMahasiswa",
+  schemaForm1,
+  "dataMahasiswa"
+);
 export default dataMahasiwa;

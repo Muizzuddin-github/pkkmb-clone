@@ -7,6 +7,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+import formatRupiah from "../utility/formatRupiah.js";
+import datePembayaran from "../utility/datePembayaran.js";
 
 export const getForm = async (req, res, next) => {
   try {
@@ -35,6 +37,7 @@ export const tambahForm = async (req, res, next) => {
       alamat: { provinsi, kecamatan, detilAlamat, kabupaten, desa, rt, rw },
       sekolah: { sekolahAsal, tahunLulus, jurusan, namaSekolah, nisn },
       dataTambahan: { ukuranKaos, ukuranAlmamater },
+      totalPembayaran,
     } = req.body;
 
     const formData = new dataMahasiswa({
@@ -71,6 +74,7 @@ export const tambahForm = async (req, res, next) => {
         ukuranKaos,
         ukuranAlmamater,
       },
+      totalPembayaran,
     });
 
     await formData.save();
@@ -219,11 +223,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(11)
       .text("Jalur Pendaftaran", 50, 150, { continued: true })
       .fontSize(12)
-      .text(data.jalurPendaftaran, 80, null, { continued: true })
-      .fontSize(11)
-      .text("Tipe pendaftaran", 180, null, { continued: true })
-      .fontSize(12)
-      .text(data.SumberForm, 200);
+      .text(data.jalurPendaftaran, 80, null);
 
     doc.strokeColor("gray");
     doc.lineWidth(0.5);
@@ -422,6 +422,32 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(12)
       .text(data?.dataTambahan?.ukuranKaos, 73, null)
       .moveDown(2);
+
+    doc.strokeColor("gray");
+    doc.lineWidth(0.5);
+    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+    doc
+      .moveUp(-4)
+      .font("Times-Bold")
+      .fontSize(12)
+      .text("Pembayaran", 50)
+      .moveDown(0.8);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Total Pembayaran", 65, null, { continued: true })
+      .fontSize(12)
+      .text(formatRupiah(data?.totalPembayaran), 85)
+      .moveDown(0.8);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(11)
+      .text("Terakhir Pembayaran", 50, null, { continued: true })
+      .fontSize(12)
+      .text(datePembayaran(data?.created_at, data?.SumberForm), 70)
+      .moveDown(4);
 
     doc
       .font("Times-Bold")
