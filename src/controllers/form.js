@@ -295,9 +295,9 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(12)
       .text(data?.alamat?.kecamatan, 110, 380, { continued: true })
       .fontSize(11)
-      .text("Desa", 260, 380, { continued: true })
+      .text("Desa", 300, 380, { continued: true })
       .fontSize(12)
-      .text(data?.alamat?.desa, 280, null);
+      .text(data?.alamat?.desa, 322, null);
 
     doc
       .fontSize(11)
@@ -306,9 +306,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .text(`${data?.alamat?.rt}/${data?.alamat?.rw}`, 130, null);
 
     const alamattext = data?.alamat?.detilAlamat;
-    const [line, result] = checkLengthAlamat(
-      alamattext.length < 200 ? alamattext : `${alamattext.slice(0, 200)} ... `
-    );
+    const [line, result] = checkLengthAlamat(alamattext);
 
     doc
       .font("Times-Roman")
@@ -403,7 +401,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       );
 
     res.setHeader("Content-Type", "application/pdf");
-    res.attachment("bukti-pembayaran.pdf");
+    // res.attachment("bukti-pembayaran.pdf");
     doc.pipe(res);
     doc.end();
   } catch (err) {
