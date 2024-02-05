@@ -183,7 +183,9 @@ export const getBuktiPendaftaran = async (req, res, next) => {
     if (!data) {
       return res.status(404).json({ message: "data not found" });
     }
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({
+      size: "A4",
+    });
 
     doc.page.margins = { top: 50, left: 50, bottom: 50, right: 50 };
     doc.image(path.resolve(__dirname, "../../public/logo.jpeg"), 100, 15, {
@@ -421,13 +423,13 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .text("Ukuran Alamamater", 52, null, { continued: true })
       .fontSize(12)
       .text(data?.dataTambahan?.ukuranKaos, 73, null)
-      .moveDown(2);
+      .moveDown(0.5);
 
     doc.strokeColor("gray");
     doc.lineWidth(0.5);
     doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
     doc
-      .moveUp(-4)
+      .moveUp(-8)
       .font("Times-Bold")
       .fontSize(12)
       .text("Pembayaran", 50)
@@ -454,7 +456,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(11)
       .text(
         "Bank Mandiri : 143-002-006-0008 atas nama STIKOM PGRI BANYUWANGI",
-        140,
+        120,
         null
       );
 
