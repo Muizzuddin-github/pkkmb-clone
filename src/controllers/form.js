@@ -109,7 +109,7 @@ export const downloadForm = async (req, res, next) => {
     for (let i = 0; i < mahasiswas.length; i++) {
       data.push({
         id: i + 1,
-        nik: mahasiswas[i].nik,
+        nik: `'${mahasiswas[i].nik}`,
         "jalur pendaftaran": mahasiswas[i].jalurPendaftaran,
         "sumber form": mahasiswas[i].SumberForm,
         "nama lengkap": mahasiswas[i].dataDiri.namaLengkap,
@@ -117,8 +117,8 @@ export const downloadForm = async (req, res, next) => {
         "jenis kelamin": mahasiswas[i].dataDiri.jenisKelamin,
         agama: mahasiswas[i]?.dataDiri?.agama,
         email: mahasiswas[i]?.dataDiri?.email,
-        "no telephone": mahasiswas[i]?.dataDiri?.noTelp,
-        "no wa": mahasiswas[i].dataDiri?.noWA,
+        "no telephone": `'${mahasiswas[i]?.dataDiri?.noTelp}`,
+        "no wa": `'${mahasiswas[i].dataDiri?.noWA}`,
         provinsi: mahasiswas[i].alamat?.provinsi,
         kecamatan: mahasiswas[i].alamat?.kecamatan,
         "detil alamat": mahasiswas[i].alamat?.detilAlamat,
@@ -130,7 +130,7 @@ export const downloadForm = async (req, res, next) => {
         "nama sekolah": mahasiswas[i].sekolah?.namaSekolah,
         "tahun lulus": mahasiswas[i].sekolah?.tahunLulus,
         jurusan: mahasiswas[i].sekolah?.jurusan,
-        nisn: mahasiswas[i].sekolah?.nisn,
+        nisn: `'${mahasiswas[i].sekolah?.nisn}`,
         "ukuran kaos": mahasiswas[i].dataTambahan?.ukuranKaos,
         "ukuran almamater": mahasiswas[i].dataTambahan?.ukuranAlmamater,
         "total pembayaran" : mahasiswas[i].totalPembayaran
