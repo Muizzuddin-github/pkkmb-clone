@@ -424,7 +424,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
       .fontSize(11)
       .text("Ukuran Alamamater", 52, null, { continued: true })
       .fontSize(12)
-      .text(data?.dataTambahan?.ukuranKaos, 73, null)
+      .text(data?.dataTambahan?.ukuranAlmamater, 73, null)
       .moveDown(0.5);
 
     doc.strokeColor("gray");
