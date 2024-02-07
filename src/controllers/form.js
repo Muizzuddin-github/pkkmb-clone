@@ -276,7 +276,7 @@ export const getBuktiPendaftaran = async (req, res, next) => {
     doc
       .font("Times-Roman")
       .fontSize(11)
-      .text("No Tepl", 106, null, { continued: true })
+      .text("No Telp", 106, null, { continued: true })
       .fontSize(12)
       .text(data?.dataDiri?.noTelp, 125, null)
       .moveDown(0.5);
