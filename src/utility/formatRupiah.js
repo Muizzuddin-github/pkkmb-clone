@@ -4,7 +4,7 @@ function formatRupiah(num) {
     currency: "IDR",
   });
 
-  return formatter.format(num);
+  return formatter.format(num).replace(",00","")
 }
 
 export default formatRupiah;
